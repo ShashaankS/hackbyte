@@ -1,0 +1,123 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Voice to Text Input</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🎙️ Speak to Gemini</h1>
+    <p>Click the mic and ask your question.</p>
+
+    <button id="micBtn">🎤 Start Listening</button>
+    <input type="text" id="geminiInput" placeholder="Your voice will appear here..." />
+    
+    <div id="status"></div>
+  </div>
+
+  <script src="voice.js"></script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Voice Input and Output</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0d1117;
+      color: #c9d1d9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      text-align: center;
+      background: #161b22;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #1f6feb;
+    }
+
+    input {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 15px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      background-color: #238636;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2ea043;
+    }
+
+    #status {
+      margin-top: 15px;
+      font-style: italic;
+      color: #8b949e;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎙️ Speak to Gemini</h1>
+    <p>Click the mic and say something. It will speak it back.</p>
+
+    <button id="micBtn">🎤 Start Listening</button>
+    <input type="text" id="geminiInput" placeholder="Your voice will appear here..." />
+    <div id="status"></div>
+  </div>
+
+  <script>
+    document.getElementById('micBtn').addEventListener('click', () => {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      const status = document.getElementById('status');
+      status.textContent = "🎧 Listening...";
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('geminiInput').value = transcript;
+        status.textContent = "✅ Captured: " + transcript;
+
+        // ✅ Speak the captured text
+        const synth = window.speechSynthesis;
+        const utterance = new SpeechSynthesisUtterance(transcript);
+        synth.speak(utterance);
+      };
+
+      recognition.onerror = (event) => {
+        status.textContent = "❌ Error: " + event.error;
+      };
+
+      recognition.onend = () => {
+        status.textContent += " 🔁 Listening stopped.";
+      };
+
+      recognition.start();
+    });
+  </script>
+</body>
+</html>
