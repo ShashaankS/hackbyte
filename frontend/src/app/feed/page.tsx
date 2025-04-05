@@ -89,7 +89,7 @@ export default function WebcamPage() {
   };
 
   return (
-    <main className="min-h-screen bg-black p-6">
+    <main className="min-h-full bg-black p-6">
       <div className="flex h-full gap-4">
         {/* Left Pane: Video Feed */}
         <div className="w-2/5 p-4 border border-red-700 rounded shadow-md">
@@ -129,7 +129,7 @@ export default function WebcamPage() {
         </div>
 
         {/* Right Pane: Detections Log */}
-        <div className="w-1/2 p-4 bg-black rounded shadow-md border border-red-700">
+        <div className="w-2/5 p-4 bg-black rounded shadow-md border border-red-700">
           <h2 className="text-xl font-bold mb-4 text-white">
             AI Safety Detections Log 
             <span className="ml-2 text-sm font-normal text-gray-400">
@@ -153,6 +153,12 @@ export default function WebcamPage() {
             )}
           </div>
         </div>
+
+        <div className="w-1/5 p-4 bg-black rounded shadow-md border border-red-700">
+            <h2 className="text-xl font-bold mb-4 text-white">
+              Voice Integration 
+            </h2>
+          </div>
       </div>
     </main>
   );

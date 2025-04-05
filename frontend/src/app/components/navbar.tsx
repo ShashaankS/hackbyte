@@ -8,9 +8,9 @@ export default function Navbar() {
     <nav className="bg-black border-b border-red-700">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         {/* Logo and Title */}
-        <Link href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-          <Image src="/vercel.svg" className="h-8" width={32} height={32} alt="AstroGuard Logo" />
-          <span className="text-2xl font-extrabold text-red-500">AstroGuard</span>
+        <Link href="/home" className="flex items-center space-x-3 rtl:space-x-reverse">
+          <Image src="/vercel.svg" className="h-8" width={32} height={32} alt="ViewAI Logo" />
+          <span className="text-2xl font-extrabold font-mono text-red-500">View - AI</span>
         </Link>
 
         {/* Profile + Hamburger Button */}
