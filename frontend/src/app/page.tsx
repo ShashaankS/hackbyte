@@ -1,8 +1,10 @@
+import WebcamFeed from "./components/webcamFeed";
+
 export default function Home() {
   return (
     <>
       <div>
-        Hello
+        <WebcamFeed></WebcamFeed>
       </div>
     </>
   );
