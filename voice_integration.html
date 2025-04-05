@@ -31,7 +31,7 @@
       color: #c9d1d9;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: center; 
       height: 100vh;
       margin: 0;
     }
@@ -87,6 +87,10 @@
   </div>
 
   <script>
+
+    const API_KEY = "AIzaSyDwPHN1Gb0Qph2eBEynNkVwFX29mh6wzFA";
+    const model = "gemini-1.5-pro";
+
     document.getElementById('micBtn').addEventListener('click', () => {
       const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 
@@ -97,14 +101,34 @@
       const status = document.getElementById('status');
       status.textContent = "🎧 Listening...";
 
-      recognition.onresult = (event) => {
+      recognition.onresult = async(event) => {
         const transcript = event.results[0][0].transcript;
         document.getElementById('geminiInput').value = transcript;
         status.textContent = "✅ Captured: " + transcript;
+        const objectDetectionJson = {
+            objects: [
+              { name: "oxygen cylinder", location: "Module B - near the entrance" },
+              { name: "toolbox", location: "Module A - top shelf" },
+              { name: "fire extinguisher", location: "Module C - behind the hatch" }
+            ]
+          };
+
+          const prompt = `
+          You are a helpful assistant on a space station.
+          An astronaut asked: "${transcript}"
+          Here is the YOLO object detection data:
+
+          ${JSON.stringify(objectDetectionJson, null, 2)}
+
+          Based on this, provide a short helpful answer.
+                    `;
+
+          const reply = await callGemini(prompt);
+          status.textContent = "🗨️ Gemini says: " + reply;
 
         // ✅ Speak the captured text
         const synth = window.speechSynthesis;
-        const utterance = new SpeechSynthesisUtterance(transcript);
+        const utterance = new SpeechSynthesisUtterance(reply);
         synth.speak(utterance);
       };
 
@@ -118,6 +142,27 @@
 
       recognition.start();
     });
+    async function callGemini(prompt) {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [{ text: prompt }]
+              }
+            ]
+          })
+        }
+      );
+
+      const data = await response.json();
+      return data?.candidates?.[0]?.content?.parts?.[0]?.text || "❌ No response from Gemini.";
+    }
   </script>
 </body>
 </html>
