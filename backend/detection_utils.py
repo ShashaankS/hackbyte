@@ -9,8 +9,8 @@ model_weights = "yolov4-tiny-custom_best.weights"
 model_cfg = "yolov4-tiny-custom.cfg"
 
 def load_model():
-    net = cv2.dnn.readNetf("${model_dir}/{model_weights}",
-                          "{model_dir}/{model_cfg}")
+    net = cv2.dnn.readNet("v4 tiny custom/yolov4-tiny-custom_best.weights",
+                          "v4 tiny custom/yolov4-tiny-custom.cfg")
     net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
     net.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
 

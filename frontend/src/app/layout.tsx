@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AstroGuard",
-  description: "AI - Driven space safety",
+  title: "View AI",
+  description: "Steamlining the ML training",
 };
 
 export default function RootLayout({

@@ -260,6 +260,16 @@ export default function ModelSetupPage() {
     if (configInputRef.current) configInputRef.current.value = '';
   };
 
+  // Function to download sample config
+  const downloadSampleConfig = () => {
+    const link = document.createElement('a');
+  link.href = '/downloads/yolov4-tiny-custom.cfg'; // relative to public/
+  link.download = 'yolov4-tiny-custom.cfg';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  };
+
   return (
     <main className="min-h-screen bg-black p-4">
       <div className="max-w-4xl mx-auto">
@@ -334,14 +344,14 @@ export default function ModelSetupPage() {
               
               {/* Config JSON Upload */}
               <div className="bg-gray-900 p-4 rounded-lg">
-                <label className="block text-white mb-2">Configuration JSON</label>
-                <div className="flex items-center">
+                <label className="block text-white mb-2">Configuration File</label>
+                <div className="flex items-center space-x-2">
                   <input
                     type="file"
                     ref={configInputRef}
                     onChange={handleConfigChange}
                     className="hidden"
-                    accept=".json"
+                    accept=""
                     disabled={uploadStatus.isUploading || trainingStatus.isTraining}
                   />
                   <button
@@ -357,6 +367,18 @@ export default function ModelSetupPage() {
                     <p>Selected: {configJson.name}</p>
                   </div>
                 )}
+                <div className="mt-2 text-xs text-gray-400">
+                  <a 
+                    href="#" 
+                    className="text-red-700 hover:text-red-500 underline" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      downloadSampleConfig();
+                    }}
+                  >
+                    Download sample configuration file
+                  </a>
+                </div>
               </div>
             </div>
             
@@ -440,10 +462,36 @@ export default function ModelSetupPage() {
             <ol className="list-decimal list-inside space-y-1 ml-2">
               <li>Upload your labeled dataset (ZIP or TAR archive, max 1GB)</li>
               <li>Upload a configuration JSON file that defines your object classes</li>
-              <li>Click "Train Model" to begin the training process</li>
+              <li>Or download our sample configuration file and modify it for your needs</li>
+              <li>Click &quot;Train Model&quot; to begin the training process</li>
               <li>Training requires 1 credit and may take several hours depending on dataset size</li>
               <li>Once training is complete, your model will be available for detection</li>
             </ol>
+          </div>
+          
+          {/* Sample Config Format */}
+          <div className="mt-4 p-4 bg-gray-900 rounded-lg text-gray-300 text-sm">
+            <h3 className="text-white font-medium mb-2">Sample Configuration Format</h3>
+            <p className="mb-2">Your configuration file should include the following information:</p>
+            <pre className="bg-black p-3 rounded overflow-x-auto text-xs">
+              {`{
+  "model_name": "custom_detector",
+  "classes": [
+    { "id": 0, "name": "person" },
+    { "id": 1, "name": "car" },
+    ...
+  ],
+  "training_settings": {
+    "batch_size": 16,
+    "learning_rate": 0.001,
+    "epochs": 100
+  },
+  "input_size": {
+    "width": 416,
+    "height": 416
+  }
+}`}
+            </pre>
           </div>
         </div>
       </div>

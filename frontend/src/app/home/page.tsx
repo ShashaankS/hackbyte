@@ -15,8 +15,8 @@ export default function Home() {
           className="absolute z-0 opacity-30 object-cover"
         />
         <div className="z-10 text-center">
-          <h2 className="text-4xl font-extrabold mb-4">Computer Vision, Simplified.</h2>
-          <p className="text-lg text-red-700">Explore real-time detection, processing, and analysis using OpenCV</p>
+          <h2 className="text-4xl font-extrabold mb-4">Training Object Detection Models, Simplified.</h2>
+          <p className="text-lg text-red-700">Explore real-time model training, processing, and analysis</p>
         </div>
       </section>
 
@@ -26,7 +26,7 @@ export default function Home() {
             href="/setup"
             className="bg-black hover:border-2 hover:border-red-700 hover:font-bold text-red-600 border-1 border-red-700 py-2 px-4 rounded-md inline-block"
             >
-            Go to Detection
+            Go to setup
         </Link>
       </div>
     </main>

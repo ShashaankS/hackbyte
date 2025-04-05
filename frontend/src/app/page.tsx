@@ -1,9 +1,7 @@
-import WebcamFeed from "./components/webcamFeed";
+import { redirect } from 'next/navigation';
 
 export default function Home() {
   return (
-    <>
-      <Link></Link>
-    </>
+    redirect('/home')
   );
 }
