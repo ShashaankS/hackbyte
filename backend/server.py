@@ -1,8 +1,17 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import cv2
 import numpy as np
+import os
+from functools import wraps
+from datetime import datetime, timedelta
+import base64
+from io import BytesIO
+from PIL import Image
 
 app = Flask(__name__)
+# CORS(app, resources={r"/api/*": {"origins": os.environ.get(" http://127.0.0.1:3000", "http://localhost:3000")}})
+CORS(app)
 
 # Load YOLO model
 net = cv2.dnn.readNet("v4 tiny custom/yolov4-tiny-custom_best.weights",
@@ -62,18 +71,48 @@ def detect_objects(frame):
     return results
 
 
-@app.route("/detect", methods=["POST"])
+# @app.route("/detect", methods=["POST"])
+# def detect():
+#     if "image" not in request.files:
+#         return jsonify({"error": "No image file provided"}), 400
+
+#     file = request.files["image"]
+#     npimg = np.frombuffer(file.read(), np.uint8)
+#     frame = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+
+#     results = detect_objects(frame)
+#     return jsonify({"detections": results})
+
+@app.route('/detect', methods=['POST'])
 def detect():
-    if "image" not in request.files:
-        return jsonify({"error": "No image file provided"}), 400
+    try:
+        data = request.get_json()
+        if not data or 'image' not in data:
+            return jsonify({'error': 'No image data provided'}), 400
 
-    file = request.files["image"]
-    npimg = np.frombuffer(file.read(), np.uint8)
-    frame = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+        # Get and clean base64 string
+        base64_image = data['image']
+        if base64_image.startswith('data:image'):
+            base64_image = base64_image.split(',')[1]
 
-    results = detect_objects(frame)
-    return jsonify({"detections": results})
+        # Decode base64 to bytes
+        image_bytes = base64.b64decode(base64_image)
 
+        # Convert to NumPy array via PIL
+        pil_image = Image.open(BytesIO(image_bytes)).convert("RGB")
+        image_np = np.array(pil_image)
+
+        # Optional: Convert RGB to BGR for OpenCV (if needed)
+        image_bgr = cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR)
+
+        # Example detection placeholder
+        height, width = image_bgr.shape[:2]
+        
+        results = detect_objects(image_bgr)
+        return jsonify({"detections": results})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
